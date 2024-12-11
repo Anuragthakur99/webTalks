@@ -13,16 +13,17 @@ dotenv.config();
 const PORT = process.env.PORT;
 const __dirname = path.resolve();
 
-// Allowed origins
+// Allowed Origins for CORS
 const allowedOrigins = [
-  "http://localhost:5173", // Local development frontend
-  "https://webtalks-frontend.onrender.com", // Deployed frontend
+  "http://localhost:5173", // For local development
+  "https://webtalks-frontend.onrender.com", // For deployed frontend
 ];
 
-// CORS middleware
+// CORS configuration
 app.use(
   cors({
     origin: (origin, callback) => {
+      // Allow all origins during development or the specific allowed origins
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
@@ -30,14 +31,16 @@ app.use(
         callback(new Error("Not allowed by CORS"));
       }
     },
-    credentials: true, // Allow sending cookies and credentials
+    credentials: true, // Allow cookies to be sent with requests
   })
 );
 
-// Preflight request handling
-app.options("*", cors()); // Handle preflight requests
-
-app.use(express.json({ limit: "50mb" }));
+// Middleware to handle JSON requests and cookie parsing
+app.use(
+  express.json({
+    limit: "50mb", // Increase the limit if you are sending large data
+  })
+);
 app.use(express.urlencoded({ limit: "50mb", extended: true }));
 app.use(cookieParser());
 
@@ -48,13 +51,14 @@ app.use("/api/messages", messageRoutes);
 // Serve frontend in production
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "../frontend/dist")));
+
   app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "../frontend/dist/index.html"));
+    res.sendFile(path.join(__dirname, "../frontend", "dist", "index.html"));
   });
 }
 
-// Start server
+// Start the server
 server.listen(PORT, () => {
   console.log("Server is running on PORT:", PORT);
-  connectDB();
+  connectDB(); // Connect to the database
 });
