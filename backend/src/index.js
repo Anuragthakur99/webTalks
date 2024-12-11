@@ -17,6 +17,7 @@ const __dirname = path.resolve();
 const allowedOrigins = [
   "http://localhost:5173", // For local development
   "https://webtalks-frontend.onrender.com", // For deployed frontend
+  "https://webtalks-backend.onrender.com", // Your backend domain (in case needed for the front end)
 ];
 
 // CORS configuration
