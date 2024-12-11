@@ -8,8 +8,8 @@ const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
     origin: [
-      "http://localhost:5173", // For local development
-      "https://webtalks-frontend.onrender.com", // For deployed frontend
+      "http://localhost:5173", // Local development
+      "https://webtalks-frontend.onrender.com", // Deployed frontend
     ],
     credentials: true,
   },
